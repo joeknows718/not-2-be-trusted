@@ -37,6 +37,8 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'timeline',
+    'storages',
 )
 
 MIDDLEWARE_CLASSES = (
@@ -52,10 +54,12 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'not_2_b_trusted.urls'
 
+TEMPLATE_PATH = os.path.join(BASE_DIR,'templates')
+
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [],
+        'DIRS': [TEMPLATE_PATH],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -99,4 +103,24 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
-STATIC_URL = '/static/'
+AWS_STORAGE_BUCKET_NAME = ''
+AWS_ACCESS_KEY_ID = os.environ['COC_AWS_ACCESS_KEY_ID']
+AWS_SECRET_ACCESS_KEY = os.environ['COC_AWS_SECRET_ACCESS_KEY']
+AWS_S3_CUSTOM_DOMAIN = '%s.s3.amazonaws.com' % AWS_STORAGE_BUCKET_NAME
+AWS_HEADERS = {  # see http://developer.yahoo.com/performance/rules.html#expires
+        'Access-Control-Allow-Origin' : '*'
+    }
+
+STATICFILES_LOCATION = 'static'
+STATICFILES_STORAGE = 'custom_storages.StaticStorage'
+STATIC_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, STATICFILES_LOCATION)
+
+MEDIAFILES_LOCATION = 'media'
+MEDIA_URL = "https://%s/%s/" % (AWS_S3_CUSTOM_DOMAIN, MEDIAFILES_LOCATION)
+DEFAULT_FILE_STORAGE = 'custom_storages.MediaStorage'
+
+STATIC_PATH = os.path.join(BASE_DIR, "static")
+
+STATICFILES_DIRS = (
+       os.path.join(BASE_DIR, 'static'),
+       )
