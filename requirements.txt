@@ -1,0 +1,9 @@
+dj-database-url==0.3.0
+Django==1.8
+django-postgrespool==0.3.0
+django-storages==1.5.1
+gunicorn==19.6.0
+Pillow==3.4.2
+psycopg2==2.6.2
+pytz==2015.4
+SQLAlchemy==1.1.4
